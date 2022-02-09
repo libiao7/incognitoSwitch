@@ -1,38 +1,52 @@
 function createNewTabInOppositeMode(url, incognito) {
-    browser.windows.getAll({
+    chrome.windows.getAll({
         windowTypes: ["normal"]
     }, windows => {
         for (var i = 0; i < windows.length; i++) {
             if (windows[i].incognito != incognito) {
-                browser.tabs.create({
+                chrome.tabs.query({
                     windowId: windows[i].id,
-                    url: url,
-                    active: true
-                });
+                    url: url
+                }, function (tabs) {
+                    chrome.windows.update(
+                        windows[i].id,
+                        { focused: true },
+                        function () {
+                            if (tabs.length > 0)
+                                chrome.tabs.update(tabs[0].id, { active: true })
+                            else if (tabs.length == 0)
+                                chrome.tabs.create({
+                                    windowId: windows[i].id,
+                                    url: url,
+                                    active: true
+                                });
+                        }
+                    )
+                })
                 return;
             }
         }
-        browser.windows.create({
+        chrome.windows.create({
             url: url,
             incognito: !incognito
         });
     })
 }
 
-browser.browserAction.onClicked.addListener((tab) => {
+chrome.browserAction.onClicked.addListener((tab) => {
     createNewTabInOppositeMode(tab.url, tab.incognito);
-    // browser.tabs.remove(tab.id);
+    // chrome.tabs.remove(tab.id);
 });
 
-browser.contextMenus.create({
+chrome.contextMenus.create({
     id: "incognitoornot",
     title: "Open Link in Incognito/Normal Window",
-    contexts: ["page","link"],
+    contexts: ["page", "link"],
     onclick: (info, tab) => {
-        createNewTabInOppositeMode(info.linkUrl||info.pageUrl, tab.incognito);
+        createNewTabInOppositeMode(info.linkUrl || info.pageUrl, tab.incognito);
     }
 });
-browser.contextMenus.create({
+chrome.contextMenus.create({
     title: "Search text in Incognito/Normal Window",
     contexts: ["selection"],
     onclick: (info, tab) => {
