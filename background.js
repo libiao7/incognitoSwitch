@@ -13,7 +13,7 @@ function createNewTabInOppositeMode(url, incognito) {
                         { focused: true },
                         function () {
                             if (tabs.length > 0)
-                                chrome.tabs.update(tabs[0].id, { active: true })
+                                chrome.tabs.update(tabs[tabs.length-1].id, { active: true })
                             else if (tabs.length == 0)
                                 chrome.tabs.create({
                                     windowId: windows[i].id,
@@ -27,8 +27,9 @@ function createNewTabInOppositeMode(url, incognito) {
             }
         }
         chrome.windows.create({
-            url: url,
-            incognito: !incognito
+            state:'maximized',
+            incognito: !incognito,
+            url: url
         });
     })
 }
