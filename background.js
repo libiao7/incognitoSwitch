@@ -38,7 +38,7 @@ chrome.action.onClicked.addListener((tab) => {
     createNewTabInOppositeMode(tab.url, tab.incognito);
     // chrome.tabs.remove(tab.id);
 });
-chrome.runtime.onInstalled.addListener(function() {
+chrome.runtime.onInstalled.addListener(function () {
     chrome.contextMenus.create({
         id: "Open Link in Incognito Or Normal Window",
         title: "Open Link in Incognito Or Normal Window",
@@ -54,11 +54,7 @@ chrome.contextMenus.onClicked.addListener(
     (info, tab) => {
         if (info.menuItemId === "Open Link in Incognito Or Normal Window")
             createNewTabInOppositeMode(info.linkUrl || info.pageUrl, tab.incognito);
-    }
-)
-chrome.contextMenus.onClicked.addListener(
-    (info, tab) => {
-        if (info.menuItemId === "Search text in Incognito Or Normal Window")
+        else if (info.menuItemId === "Search text in Incognito Or Normal Window")
             createNewTabInOppositeMode("https://www.google.com/search?q=" + encodeURIComponent(info.selectionText), tab.incognito);
     }
 )
