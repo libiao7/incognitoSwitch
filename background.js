@@ -13,7 +13,7 @@ function createNewTabInOppositeMode(url, incognito) {
                         { focused: true },
                         function () {
                             if (tabs.length > 0)
-                                chrome.tabs.update(tabs[tabs.length-1].id, { active: true })
+                                chrome.tabs.update(tabs[tabs.length - 1].id, { active: true })
                             else if (tabs.length == 0)
                                 chrome.tabs.create({
                                     windowId: windows[i].id,
@@ -27,30 +27,38 @@ function createNewTabInOppositeMode(url, incognito) {
             }
         }
         chrome.windows.create({
-            state:'maximized',
+            state: 'maximized',
             incognito: !incognito,
             url: url
         });
     })
 }
 
-chrome.browserAction.onClicked.addListener((tab) => {
+chrome.action.onClicked.addListener((tab) => {
     createNewTabInOppositeMode(tab.url, tab.incognito);
     // chrome.tabs.remove(tab.id);
 });
-
-chrome.contextMenus.create({
-    id: "incognitoornot",
-    title: "Open Link in Incognito/Normal Window",
-    contexts: ["page", "link"],
-    onclick: (info, tab) => {
-        createNewTabInOppositeMode(info.linkUrl || info.pageUrl, tab.incognito);
-    }
+chrome.runtime.onInstalled.addListener(function() {
+    chrome.contextMenus.create({
+        id: "Open Link in Incognito Or Normal Window",
+        title: "Open Link in Incognito Or Normal Window",
+        contexts: ["page", "link"]
+    });
+    chrome.contextMenus.create({
+        id: "Search text in Incognito Or Normal Window",
+        title: "Search text in Incognito Or Normal Window",
+        contexts: ["selection"]
+    });
 });
-chrome.contextMenus.create({
-    title: "Search text in Incognito/Normal Window",
-    contexts: ["selection"],
-    onclick: (info, tab) => {
-        createNewTabInOppositeMode("https://www.google.com/search?q=" + encodeURIComponent(info.selectionText), tab.incognito);
+chrome.contextMenus.onClicked.addListener(
+    (info, tab) => {
+        if (info.menuItemId === "Open Link in Incognito Or Normal Window")
+            createNewTabInOppositeMode(info.linkUrl || info.pageUrl, tab.incognito);
     }
-});
+)
+chrome.contextMenus.onClicked.addListener(
+    (info, tab) => {
+        if (info.menuItemId === "Search text in Incognito Or Normal Window")
+            createNewTabInOppositeMode("https://www.google.com/search?q=" + encodeURIComponent(info.selectionText), tab.incognito);
+    }
+)

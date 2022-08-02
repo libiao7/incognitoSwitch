@@ -1,19 +1,13 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "incognitoSwitch",
-    "version": "2022.2.9",
-    "browser_action": {
-        "default_icon": {
-            "128": "icon128.png"
-        }
-    },
+    "version": "2022.8.2",
+    "action": {},
     "permissions": [
         "activeTab",
         "contextMenus"
     ],
     "background": {
-        "scripts": [
-            "background.js"
-        ]
+        "service_worker": "background.js"
     }
 }
