@@ -39,18 +39,18 @@ chrome.browserAction.onClicked.addListener((tab) => {
     // chrome.tabs.remove(tab.id);
 });
 
-chrome.contextMenus.create({
-    id: "incognitoornot",
-    title: "Open Link in Incognito/Normal Window",
-    contexts: ["page", "link"],
-    onclick: (info, tab) => {
-        createNewTabInOppositeMode(info.linkUrl || info.pageUrl, tab.incognito);
-    }
-});
-chrome.contextMenus.create({
-    title: "Search text in Incognito/Normal Window",
-    contexts: ["selection"],
-    onclick: (info, tab) => {
-        createNewTabInOppositeMode("https://www.google.com/search?q=" + encodeURIComponent(info.selectionText), tab.incognito);
-    }
-});
+// chrome.contextMenus.create({
+//     id: "incognitoornot",
+//     title: "Open Link in Incognito/Normal Window",
+//     contexts: ["page", "link"],
+//     onclick: (info, tab) => {
+//         createNewTabInOppositeMode(info.linkUrl || info.pageUrl, tab.incognito);
+//     }
+// });
+// chrome.contextMenus.create({
+//     title: "Search text in Incognito/Normal Window",
+//     contexts: ["selection"],
+//     onclick: (info, tab) => {
+//         createNewTabInOppositeMode("https://www.google.com/search?q=" + encodeURIComponent(info.selectionText), tab.incognito);
+//     }
+// });
